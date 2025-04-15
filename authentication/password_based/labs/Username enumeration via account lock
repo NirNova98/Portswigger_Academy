@@ -1,0 +1,14 @@
+Vulnerability:
+	In case of multiple failed login attempts using a *valid/existing* username, the server responds with a message indicating that the account is temporarily locked.
+	However, when using a non-existent username, the server does not show such a message.
+	This allows an attacker to enumerate valid usernames based on the account lock response.
+
+Exploit:
+	- Bruteeforce the same username with a wrong password 4 times to reveal the lock/cooldown message.
+	- Bruteforce the password while checking if the account was locked and try again the same request until the request was proccesed.
+	
+Example:
+	None
+	
+Prevention:
+	- Reply with the same cooldown messasge even if the username is not valid. 

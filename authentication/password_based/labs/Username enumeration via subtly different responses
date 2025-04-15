@@ -1,0 +1,12 @@
+Vulnerability:
+	The server reflects a different responed when a username exists.
+				
+Exploit:
+	Bruteforce the usernames until a different response is arrise.
+	Then bruteforce the passwords with that username.
+	
+Example:
+	NONE
+	
+Prevention:
+	Replay with the same respond wether the username or password are wront.
