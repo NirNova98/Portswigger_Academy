@@ -1,0 +1,13 @@
+Vulnerability:
+	There are two vulnerabilities;
+	1. The request that tells the server to generate an MFA token is sent by the browser with parameter called "verify" with the wanter username value, it could be changed to any username and being sent to the server.
+	2. There is no limit to the number of tries so the MFA could be brute forced.
+				
+Exploit:
+	Make the server generate an MFA token to the wanted user by altering the "verify" parameter, then brute forcing the MFA. 
+	
+Example:
+	NONE
+	
+Prevention:
+	Set the verify value to a random string to each session that will be generated after a success login (before the MFA after the username&password).

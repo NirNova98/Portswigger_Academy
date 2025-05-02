@@ -1,0 +1,13 @@
+Vulnerability:
+	The server only checks the password if the username is valid.
+	An attacker can brute-force usernames using a very long password to determine which usernames are valid by observing response timing.
+	
+Exploit:
+	Brute-force usernames with a very long password to cause a response delay when a valid username is used, then brute-force the passwords for that username. 
+	
+Example:
+	NONE
+	
+Prevention:
+	- Always check the password, even if the username does not exist.
+	- Limit the length of the password processed by the server without notifying the user that their input password is too long.
