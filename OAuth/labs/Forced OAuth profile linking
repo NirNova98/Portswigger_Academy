@@ -17,7 +17,7 @@ Explanation:
 	- Send the victim a link to the page that hosts this script.
 	- By that, the victim unintentionaly will send a request to the blog, requesting to attach his account with our social account.
 	
-	**'window.location works because it forces the victim’s browser to make the GET, automatically including its cookies**
+	**'window.location' works because it forces the victim’s browser to make the GET, automatically including its cookies**
 	
 Prevention:
 	- Add a state / CSRF token at the start of the process to make sure that the same browser performing the action (enforced by the Same-Origin Policy).
