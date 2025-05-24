@@ -1,0 +1,29 @@
+Vulnerability:
+	The user information passes from the OAuth provider to the browser, then the browser sending that user info to the blog app which the blog up blindly trust.
+	An attacker can intercept and modify this data before it reaches the app.
+	
+Exploit:
+	During the OAuth flow, the attacker alters the user info payload to impersonate someone else.
+	Modify the POST request's body that was send to "/authenticate".
+	
+Example:
+	-	OAuth provider → browser:
+		{
+			"sub":"wiener",
+			"name":"Peter Wiener",
+			"email":"wiener@hotdog.com",
+			"email_verified":true
+		}
+	
+	-	Browser → blog app (altered):
+		{
+			"email":"carlos@carlos-montoya.net",
+			"username":"carlos",
+			"token":"9PPt4W43I0paIus7N_K4QXjkkjZL-QUaxvUiKwIQ6lK"
+		}
+	
+	-	The blog app sees this as a legitimate OAuth response and logs in the attacker as “carlos” and responses with a valid session key for that user.
+	-	Then The attacker can use this session key to identify as the victem (in this case - carlos).
+	
+Prevention:
+	- Have the blog app fetch and verify the user info directly from the OAuth provider (server-to-server), instead of trusting data forwarded by the client.

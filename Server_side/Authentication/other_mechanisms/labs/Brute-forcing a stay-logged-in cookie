@@ -1,0 +1,15 @@
+Vulnerability:
+	The server generates the stay-logged-in token using a predictable concatenation of static values.
+	An attacker can reconstruct the format and predict other users' stay-logged-in tokens.
+	
+Exploit:
+	Concatenate the username and the MD5 hash of a password with a colon (:), then Base64 encode the result.
+	Bruteforce by iterating over common passwords, computing the token, and checking for HTTP 200 responses.
+	
+Example:
+	Password: "123456" -> MD5: "e10adc3949ba59abbe56e057f20f883e"
+	Username + MD5-> "carlos:e10adc3949ba59abbe56e057f20f883e"
+	Base64: "Y2FybG9zOmUxMGFkYzM5NDliYTU5YWJiZTU2ZTA1N2YyMGY4ODNl" -> stay-logged-in token. 
+	
+Prevention:
+	Use a secure, random value or the session ID as the stay-logged-in token instead of predictable data.
