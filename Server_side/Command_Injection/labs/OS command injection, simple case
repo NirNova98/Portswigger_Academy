@@ -1,0 +1,13 @@
+Vulnerability:
+	The server is not sanitizing the input.
+	Allowing an attacker to add a piece of code to it.
+	
+Exploit:
+	productId=2&storeId=2;whoami
+	
+Explenation:
+	The server takes the input of the parameter "storeId" as a whole without checking if it is a valid / expected value, so by adding the ; to it, we can add any command afterwards. 
+	
+Prevention:
+	- Allow only numbers for the input as it is supposed to be.
+	- Sanitize the input value.
