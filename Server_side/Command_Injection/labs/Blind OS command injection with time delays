@@ -1,0 +1,14 @@
+Vulnerability:
+	One of the input fields is not sanitizing correctly,
+	Allowing an attacker to escape input and execute a command.
+	
+Exploit:
+	Add double quotes in the message input field, followed by a semicolon and your command.
+	
+Example:
+	...  
+	&message=mishmash";ping+-c+10+8.8.8.8"
+	
+Prevention:
+	- Do not allow double quotes in input, or escape them using a backslash (\).
+	
