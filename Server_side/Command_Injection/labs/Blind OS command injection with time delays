@@ -3,7 +3,8 @@ Vulnerability:
 	Allowing an attacker to escape input and execute a command.
 	
 Exploit:
-	Add double quotes in the message input field, followed by a semicolon and your command.
+	Add double quotes in the message input field, followed by a semicolon and your command:
+	&message=mishmash";[PAYLOAD]"	
 	
 Example:
 	...  

