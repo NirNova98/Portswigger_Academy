@@ -1,12 +1,13 @@
 Vulnerability:
-	
+	The server does not validate or sanitize user input,
+	Allowing an attacker to inject JavaScript that is reflected in the response and executed in the victim's browser.
 	
 Exploit:
 	Example:
 		<script>[PAYLOAD]</script>
 	
-	POC:
+	Exploit Script:
 		<script>alert("lol")</script>
 	
 Prevention:
-	
+	- Check the input and validate it's integrity.
