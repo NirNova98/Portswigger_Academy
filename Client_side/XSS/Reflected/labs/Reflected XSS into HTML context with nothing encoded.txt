@@ -1,0 +1,12 @@
+Vulnerability:
+	
+	
+Exploit:
+	Example:
+		<script>[PAYLOAD]</script>
+	
+	POC:
+		<script>alert("lol")</script>
+	
+Prevention:
+	
