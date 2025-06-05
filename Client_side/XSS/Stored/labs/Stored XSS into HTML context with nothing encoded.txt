@@ -1,0 +1,14 @@
+Vulnerability:
+	The server does not sanitize the input at all.
+	Allowing an aattacker to peform Stored XSS with no restrictions.
+	
+Exploit:
+	Example:
+		<script>[PAYLOAD]</script>
+	
+	Exploit Script:
+		<script>alert("lol")</script>
+	
+Prevention:
+	- Filter unwanted words (like script/onclick/onerror etc).
+	- Filter special character or encode them before being viewed in in the page.
