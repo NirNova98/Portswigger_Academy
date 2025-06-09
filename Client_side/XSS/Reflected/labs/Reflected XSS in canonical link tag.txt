@@ -1,0 +1,15 @@
+Vulnerability:
+	
+	
+Exploit:
+	Example:
+		
+	
+	Exploit Script:
+		
+	
+Explanation:
+	
+	
+Prevention:
+	

@@ -1,0 +1,24 @@
+Vulnerability:
+	The server does not encoding the characters: ", '.
+	Allowing an attacker to escape the attribute to perform JS execution by adding other attributes.
+	
+Exploit:
+	Example:
+		"autofocus onfocus=[PAYLOAD]  x="
+	
+	Exploit Script:
+		"autofocus onfocus=alert('lol')  x="
+	
+Explanation:
+	- By searching for a random value lets say "abc123lol" we can observe that the input will be reflected in two area in the source code (using ctrl+U):
+		1. <h1>0 search results for 'abc123lol'</h1>
+		2. <input type=text placeholder='Search the blog...' name=search value="abc123lol">	
+	- The first reflaction is not what were looking for but the second one.
+	- So all we need to do to escape the value of the "value" attribute is to add (").
+	- Then we can add our attributes as we wish: "autofocus onfocus=alert(1)".
+	- Then, to not cause an error, close the quotes: x="
+	
+Prevention:
+	- HTML Encode the quotes:
+		" -> &quot;
+		' -> &apos;

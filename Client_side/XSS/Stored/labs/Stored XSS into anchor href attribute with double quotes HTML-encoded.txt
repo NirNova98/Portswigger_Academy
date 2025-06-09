@@ -1,0 +1,16 @@
+Vulnerability:
+	The "Website:" input is injected directly to the html without filtring or sanitazing.
+	Allowing an attacker to manipulate the website and trigger a JS using href.
+	
+Exploit:
+	Exploit Script:
+		javascript:alert('lol')
+	
+Explanation:
+	- By uploading a post with a random value for each input (https://lol.com for "Website") we can observe that the "Website" input will be reflected inside an href attribute:
+		<a id="author" href="https://lol.com">someone</a>
+	- By that we can triger a JS by inputing "javascript:[PAYLOAD]" in it and clicking the anchor button (The value of "Name" input).
+
+Prevention:
+	- Make sure the template of a url will be inputed -> http/s://domain.
+	- Sanitize and filter the input -> encode before uploading to the website.
