@@ -64,7 +64,7 @@ def bruteForce():
 
 def main1():
     # Put the passwords in a Queue
-    with open('../../credentials/passwords', 'r') as file:
+    with open('../../credentials/passwords.txt', 'r') as file:
         for line in file:
             password_queue.put(line.strip('\n'))
 

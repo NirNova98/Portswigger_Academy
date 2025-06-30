@@ -1,0 +1,20 @@
+Vulnerability:
+	The server does not sanitize the input,
+	Allowing an attacker to escape into the code via a parameter in the URL and inject JS. 
+	
+Exploit:
+	Exploit Script:
+		https://server.net/post?postId=1&'},toString=a=>{throw/**/onerror=alert,1337},window+'',{b:'
+	
+Explanation:
+	& - To be able to inject other characters without the page ignore the request.
+	'} - Escape and close the body string then the option object (second parameter) in the fetch function.
+	toString=a=>{throw/**/onerror=alert,1337}:
+		toString=a=>{..} - Assigns function a to toString, overriding it's defualt value.
+			throw - Stops execution and causes a runtime error, triggering the global variable 'window.onerror'.
+			onerror=alert - Assigns the built-in alert function to the global onerror handler.
+			1337 - This value is thrown and uncaught, triggering an error that passes it as the first argument to the alert function.
+		window+'' - Triggers 'window.toString()', which now runs the function a() that was assigned to toString.
+	
+Prevention:
+	Do not allow any value in the 'postId' parameter which is not an intiger.

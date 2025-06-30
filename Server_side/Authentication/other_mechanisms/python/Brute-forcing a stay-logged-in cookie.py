@@ -55,7 +55,7 @@ def main():
     number_of_threads = 10
 
     # Put the usernames in a Queue
-    with open('../credentials/passwords', 'r') as file:
+    with open('../credentials/passwords.txt', 'r') as file:
         for line in file:
             passwords_queue.put(line.strip('\n'))
 

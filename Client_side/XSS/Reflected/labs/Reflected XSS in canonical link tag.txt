@@ -1,15 +1,23 @@
 Vulnerability:
-	
+	The server puts the URL directly inside the canonical tag and does not restrict single quotes,
+	Allowing an attacker to to escape from the href attribute and inject JS.
 	
 Exploit:
 	Example:
-		
+		https://server.net/?'[PAYLOAD]
 	
 	Exploit Script:
+		https://server.net/?'accesskey='x'onclick='alert(1)
 		
 	
 Explanation:
+	- The tag of the canonical link looks like this:
+		<link rel="canonical" href='https://server.net/'>
+	- By trying to inject single and double quotes to see what passes to the page source, single quotes are accepted and result in something like:
+		<link rel="canonical" href='https://server.net/?''>
+	- So by adding an accesskey attribute (accesskey='x') and an event listener (onclick='alert(1)'), JavaScript would run behind the scenes.
 	
 	
 Prevention:
-	
+	- Encode quotes and special characters to prevent user from performing an escaping.
+	- Validate and sanitize URLs on the server side to allow only expected formats.
