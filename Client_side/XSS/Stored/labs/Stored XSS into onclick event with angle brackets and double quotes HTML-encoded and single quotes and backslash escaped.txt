@@ -1,0 +1,15 @@
+Vulnerability:
+	Poor input sanitization allows injection into the onclick attribute of a <button> tag, enabling script execution
+	
+Exploit:
+	Exploit Script:
+		&apos;-alert(1)-&apos;
+	
+Explanation:
+	The browser decode attributes value before executing,
+	So by adding (&apos;) the browser will decode it to a single quote (').
+	Also, after the second &apos; which is ('), there is another quote, those two are invalid to sit in the middle of the code like so: [alert(1) ''] and cause an error.
+	To prevent this, add '-' to keep the code valid and the injected code syntactically correct.
+	
+Prevention:
+	Properly escape or sanitize all user input, including HTML-encoded values.
