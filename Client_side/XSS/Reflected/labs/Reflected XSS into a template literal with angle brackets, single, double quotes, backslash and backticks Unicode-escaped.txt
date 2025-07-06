@@ -1,0 +1,14 @@
+Vulnerability:
+	The vulnerability arises because escaping ' as \u0027 does not prevent breaking out of the visual single-quote in the rendered output.
+	Allowing an attacker to inject ${...} inside a JavaScript template literal, which is then evaluated as code at runtime.
+	
+Exploit:
+	Example:
+		lol'${[PAYLOAD]}
+	
+	Exploit Script:
+		lol'${alert(1)}
+	
+Prevention:
+	- Apply strict input validation and output encoding.
+	- Never interpolate unsanitized user input into template literals.

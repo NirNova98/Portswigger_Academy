@@ -1,0 +1,19 @@
+Vulnerability:
+	The page takes the storeId from the URL, and uses document.write() to insert it directly into the HTML of a <select> menu, without sanitizing the input.
+	Allowing an attacker to inject and execute JS.
+	
+Exploit:
+	Example:
+		?productId=1&storeId=lol<script>[PAYLOAD]</script>
+	
+	Exploit Script:
+		?productId=1&storeId=lol<script>alert(1)</script>
+	
+Explanation:
+	By adding the "storeId" parameter to the URL, setting its value to "lol" for example, the server reflects this value to the select menu, behind the scenes it will look like so:
+		<option selected="">lol</option>
+	So by setting it's value to: "<script>[SOMETHING]</script>" it will run JS.
+	
+Prevention:
+	- Do not get the parameter from the URL.
+	- Sanitize and filter the input, check wether the input is a valid and wanted value.

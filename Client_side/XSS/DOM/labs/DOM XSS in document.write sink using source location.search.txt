@@ -1,0 +1,23 @@
+Vulnerability:
+	The page dynamicly execute using document.write() the input from the search parameter from the URL without sanitizing this input.
+	Allowing an attacker to inject a script to this param and execute it.
+	
+Exploit:
+	Example:
+		"><script>[PAYLOAD]</script>
+	
+	Exploit Script:
+		"><script>alert(1)</script>
+	
+Explanation:
+	- The page get the search param value, after the user search for it and save  it inside 'query':
+		var query = (new URLSearchParams(window.location.search)).get('search');
+	- Then writing it directly into the document as HTML and not as a text:
+		document.write('<img src="/resources/images/tracker.gif?searchTerms='[INJECTS RIGHT HERE]'">');
+	
+	So by injecting "> im closing the <img> tag and opening a <script> tag allowing the execution.
+	
+Prevention:
+	- Do not accept unwanted characters.
+	- Sanitize and filter some words and characters.
+	- Make a whitelist of allowed input.

